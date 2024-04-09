@@ -1,6 +1,8 @@
 import ComparadoryContadordeContenido.Analisisdetexto;
 import EditordeTextoInteractivo.Editordetexto;
 import EditordeTextoInteractivo.NavegacionyListado;
+import BúsquedadePalabrasyGestióndeContactos.Agendadecontactos;
+import ValidacióndeEmailyDiseñoGráfico.ValidadordeEmail;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +12,12 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
+        Agendadecontactos agenda = new Agendadecontactos(); // Instanciamos la agenda de contactos
+
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Object[] options = {"Editar texto", "Analizar texto","Navegar y listar archivos",};
+                Object[] options = {"Editar texto", "Analizar texto","Navegar y listar archivos", "Gestión de contactos","Validar email"};
                 int n = JOptionPane.showOptionDialog(null,
                         "¿Qué quieres hacer?",
                         "Editor de Texto Interactivo",
@@ -58,6 +62,17 @@ public class Main {
                     frame.setVisible(true);
                     frame.setLocationRelativeTo(null);
                     frame.setResizable(true);
+                } else if (n == 3) {
+                    String email = JOptionPane.showInputDialog("Introduce una dirección de correo electrónico:");
+                    boolean esValido = ValidadordeEmail.validarEmail(email);
+                    if (esValido) {
+                        JOptionPane.showMessageDialog(null, "El email ingresado es válido.", "Validación de Email", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El email ingresado no es válido.", "Validación de Email", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else if (n == 4) {
+                    // Gestión de contactos
+                    gestionContactos(agenda);
                 }
             }
         });
@@ -85,5 +100,59 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void gestionContactos(Agendadecontactos agenda) {
+        boolean continuar = true;
+        while (continuar) {
+            String[] opciones = {"Agregar contacto", "Buscar contacto", "Mostrar contactos", "Salir"};
+            int opcion = JOptionPane.showOptionDialog(null,
+                    "Selecciona una opción:",
+                    "Gestión de Contactos",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opciones,
+                    opciones[0]);
+            switch (opcion) {
+                case 0:
+                    agregarContacto(agenda);
+                    break;
+                case 1:
+                    buscarContacto(agenda);
+                    break;
+                case 2:
+                    mostrarContactos(agenda);
+                    break;
+                case 3:
+                    continuar = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    public static void agregarContacto(Agendadecontactos agenda) {
+        String nombre = JOptionPane.showInputDialog("Introduce el nombre del contacto:");
+        String telefono = JOptionPane.showInputDialog("Introduce el teléfono del contacto:");
+        agenda.agregarContacto(nombre, telefono);
+        JOptionPane.showMessageDialog(null, "Contacto agregado correctamente.");
+    }
+    public static void buscarContacto(Agendadecontactos agenda) {
+        String nombreBuscar = JOptionPane.showInputDialog("Introduce el nombre del contacto a buscar:");
+        String contactoEncontrado = String.valueOf(agenda.buscarContacto(nombreBuscar));
+        if (!contactoEncontrado.equals("Contacto no encontrado")) {
+            JOptionPane.showMessageDialog(null, "Contacto encontrado: " + contactoEncontrado, "Búsqueda de contacto", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Contacto no encontrado.", "Búsqueda de contacto", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    public static void mostrarContactos(Agendadecontactos agenda) {
+        Map<String, String> contactos = agenda.obtenerContactos();
+        StringBuilder listaContactos = new StringBuilder();
+        for (Map.Entry<String, String> entry : contactos.entrySet()) {
+            listaContactos.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+        JOptionPane.showMessageDialog(null, "Lista de contactos:\n" + listaContactos.toString());
     }
 }

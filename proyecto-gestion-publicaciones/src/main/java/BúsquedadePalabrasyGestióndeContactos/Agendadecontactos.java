@@ -1,32 +1,46 @@
 package BúsquedadePalabrasyGestióndeContactos;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Agendadecontactos {
-    private Map<String, String> contactos; // Mapa para almacenar contactos (Nombre, Número)
+    private List<Contacto> contactos;
 
     public Agendadecontactos() {
-        contactos = new HashMap<>();
+        contactos = new ArrayList<>();
     }
 
-    // Agregar un nuevo contacto al agenda
-    public void agregarContacto(String nombre, String numero) {
-        contactos.put(nombre, numero);
+    public void agregarContacto(Contacto contacto) {
+        contactos.add(contacto);
     }
 
-    // Buscar un contacto por nombre
-    public String buscarContacto(String nombre) {
-        return contactos.getOrDefault(nombre, "Contacto no encontrado");
+    public Contacto buscarContacto(String nombre) {
+        for (Contacto contacto : contactos) {
+            if (contacto.getNombre().equalsIgnoreCase(nombre)) {
+                return contacto;
+            }
+        }
+        return null;
     }
 
-    // Eliminar un contacto por nombre
-    public void eliminarContacto(String nombre) {
-        contactos.remove(nombre);
+    public void mostrarContactos() {
+        if (contactos.isEmpty()) {
+            System.out.println("No hay contactos en la agenda.");
+        } else {
+            System.out.println("Lista de contactos:");
+            for (Contacto contacto : contactos) {
+                System.out.println(contacto);
+            }
+        }
     }
 
-    // Obtener todos los contactos
+    public void agregarContacto(String nombre, String telefono) {
+    }
+
     public Map<String, String> obtenerContactos() {
-        return contactos;
+        return null;
     }
+
 }
+
