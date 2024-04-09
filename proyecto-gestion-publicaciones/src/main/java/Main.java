@@ -63,8 +63,8 @@ public class Main {
         });
 
         Analisisdetexto analisis = new Analisisdetexto();
-        File file1 = new File("ruta/al/archivo 1.txt");
-        File file2 = new File("ruta/al/archivo 2.txt");
+        File file1 = new File("java/archivostexto/archivo1.txt");
+        File file2 = new File("java/archivostexto/archivo2.txt");
         try {
             boolean sonIguales = analisis.compararArchivos(file1, file2);
             System.out.println("Los archivos son iguales: " + sonIguales);
